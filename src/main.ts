@@ -18,13 +18,13 @@ async function bootstrap() {
       cookie: {
         httpOnly: true,
         sameSite: 'none',
-        secure: false,
+        secure: true, // NOTE trueにしないとCookieにcsrf-tokenが保存されない
       },
       value: (req: Request) => {
         return req.header('csrf-token');
       },
     }),
   );
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 3005);
 }
 bootstrap();
