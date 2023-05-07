@@ -36,7 +36,7 @@ export class AuthController {
     const jwt = await this.authService.login(dto);
     res.cookie('access_token', jwt.accessToken, {
       httpOnly: true,
-      secure: false,
+      secure: true, // NOTE trueにしないとブラウザからのアクセス時にcookieにaccess-tokenを保存しない
       sameSite: 'none',
       path: '/',
     });
