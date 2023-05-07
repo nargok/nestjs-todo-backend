@@ -13,6 +13,8 @@ import { Csrf, Msg } from './interfaces/auth.interface';
 import { Request, Response } from 'express';
 import { AuthDto } from './dto/auth.dto';
 
+const accessTokenKey = 'access_token';
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -34,7 +36,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<Msg> {
     const jwt = await this.authService.login(dto);
-    res.cookie('access_token', jwt.accessToken, {
+    res.cookie(accessTokenKey, jwt.accessToken, {
       httpOnly: true,
       secure: true, // NOTE trueにしないとブラウザからのアクセス時にcookieにaccess-tokenを保存しない
       sameSite: 'none',
@@ -48,9 +50,9 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('/logout')
   logout(@Req() req: Request, @Res({ passthrough: true }) res: Response): Msg {
-    res.cookie('access-token', '', {
+    res.cookie(accessTokenKey, '', {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: 'none',
       path: '/',
     });
